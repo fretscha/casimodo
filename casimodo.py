@@ -11,6 +11,8 @@ from flask import redirect, url_for, request
 from flask_debugtoolbar import DebugToolbarExtension
 from forms import LoginForm
 
+DEFAULT_SERVICE_URL = '/debug'
+
 
 app = Flask(__name__)
 app.debug = True
@@ -31,17 +33,21 @@ def make_session_permanent():
     app.permanent_session_lifetime = timedelta(seconds=300)
 
 
+@app.route('/debug', methods=['GET'])
+def debug():
+    return "you are logged in"
+
+
 @app.route('/cas/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
     if request.method == 'POST':
         session['username'] = request.form['username']
-        return redirect(url_for('index'))
+        return redirect(session['service'])
     if request.method == 'GET':
-        service = request.args.get('service', '')
+        service = request.args.get('service', DEFAULT_SERVICE_URL)
         session['service'] = service
         return render_template('login.html', form=form)
-
 
 
 

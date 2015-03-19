@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from flask.wtf import Form, TextField, PasswordField, validators
+from wtforms import Form, TextField, PasswordField, validators
 
 
 class LoginForm(Form):

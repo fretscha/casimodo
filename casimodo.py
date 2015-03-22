@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import os
 import sys
@@ -48,7 +49,6 @@ def login():
         service = request.args.get('service', DEFAULT_SERVICE_URL)
         session['service'] = service
         return render_template('login.html', form=form)
-
 
 
 @app.route('/logout')

@@ -36,7 +36,7 @@ def make_session_permanent():
 
 @app.route('/debug', methods=['GET'])
 def debug():
-    return "you are logged in"
+    return "".join(["<b>{}</b>: {} <br>".format(key, session[key]) for key in session])
 
 
 @app.route('/cas/login', methods=['GET', 'POST'])

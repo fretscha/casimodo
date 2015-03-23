@@ -1,14 +1,63 @@
-{% extends "layout.html" %}
+{% extends "base.html" %}
 {% block body %}
-  <h2>Login</h2>
-  {% if error %}<p class=error><strong>Error:</strong> {{ error }}{% endif %}
-  <form action="{{ url_for('login') }}" method=post>
-    <dl>
-      <dt>Username:
-      <dd><input type=text name=username>
-      <dt>Password:
-      <dd><input type=password name=password>
-      <dd><input type=submit value=Login>
-    </dl>
-  </form>
+  <div class="container">
+    <div id="loginbox" style="margin-top:50px;" class="mainbox col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
+      <div class="panel panel-info" >
+        <div class="panel-heading">
+          <div class="panel-title">CASimodo Login</div>
+          <div style="float:right; font-size: 80%; position: relative; top:-10px"><a href="#"></a></div>
+        </div>
+        <div style="padding-top:30px" class="panel-body" >
+          <div style="display:none" id="login-alert" class="alert alert-danger col-sm-12"></div>
+          <form id="loginform" class="form-horizontal" role="form">
+            <div style="margin-bottom: 25px" class="input-group">
+              <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+              <input id="login-username" type="text" class="form-control" name="username" value="" placeholder="username or email">
+            </div>
+            <div style="margin-bottom: 25px" class="input-group">
+              <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+              <input id="login-password" type="password" class="form-control" name="password" placeholder="password">
+            </div>
+            <div style="margin-top:10px" class="form-group">
+              <!-- Button -->
+              <div class="col-sm-12 controls">
+                <a id="btn-login" href="#" class="btn btn-success">Login  </a>
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="col-md-12 control">
+                <div style="border-top: 1px solid#888; padding-top:15px; font-size:85%" >
+                  <a href="#" onClick="$('#loginbox').hide(); $('#disclaimerbox').show()">
+                    Cookie Disclaimer
+                  </a>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div id="disclaimerbox" style="display:none; margin-top:50px" class="mainbox col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
+      <div class="panel panel-info">
+        <div class="panel-heading">
+          <div class="panel-title">Cookie disclaimer</div>
+          <div style="float:right; font-size: 85%; position: relative; top:-10px"><a id="signinlink" href="#" onclick="$('#disclaimer').hide(); $('#loginbox').show()">Login</a></div>
+        </div>
+        <div class="panel-body" >
+          <p>Cookies are text files containing small amounts of information which are downloaded to your device when you visit a website. You can find more information about cookies at <a href="http://www.allaboutcookies.org">www.allaboutcookies.org</a>
+        </p>
+        <p>In order to be able to identify your authenticated session, we need to set a session cookie to operate properly. It will allow us to provide the requested services such authentication and authorization.  If these are deactivated, a user will not be able to aut.</p>
+        <div class="form-group">
+          <div class="col-md-12 control">
+            <div style="border-top: 1px solid#888; padding-top:15px; font-size:85%" >
+              <a href="#" onClick="$('#disclaimerbox').hide(); $('#loginbox').show()">
+                back to login
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock %}

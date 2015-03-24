@@ -51,7 +51,7 @@ def login():
         return render_template('login.html', form=form)
 
 
-@app.route('/logout')
+@app.route('/cas/logout',  methods=['GET'])
 def logout():
     # remove the username from the session if it's there
     session.pop('username', None)

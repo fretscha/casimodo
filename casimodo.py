@@ -2,41 +2,71 @@
 # -*- coding: utf-8 -*-
 import os
 import sys
-import redis
-from datetime import timedelta
 import logging
 
-
 from flask import Flask, session, render_template
-from flask import redirect, url_for, request
+from flask import redirect, url_for, request, make_response
+
+from flask.ext.sqlalchemy import SQLAlchemy
+
+from flask_kvsession import KVSessionExtension
+from simplekv.db.sql import SQLAlchemyStore
+
 from flask_debugtoolbar import DebugToolbarExtension
 from forms import LoginForm
 
-DEFAULT_SERVICE_URL = '/debug'
-
 
 app = Flask(__name__)
-app.debug = True
-
-
-app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
-
-# set the secret key. keep this really secret:
-app.secret_key = bytearray(os.urandom(64))
+app.secret_key = os.urandom(128)
+app.config.from_object('settings.DevelopmentConfig')
 toolbar = DebugToolbarExtension(app)
 
-app.redis = redis.StrictRedis('localhost', port=6379, db=0)
+
+# SQLAlchemy
+db = SQLAlchemy(app)
 
 
-@app.before_request
-def make_session_permanent():
-    session.permanent = True
-    app.permanent_session_lifetime = timedelta(seconds=300)
+
+
+
+# Define models
+roles_users = db.Table('roles_users',
+        db.Column('user_id', db.Integer(), db.ForeignKey('user.id')),
+        db.Column('role_id', db.Integer(), db.ForeignKey('role.id')))
+
+class Role(db.Model, RoleMixin):
+    id = db.Column(db.Integer(), primary_key=True)
+    name = db.Column(db.String(80), unique=True)
+    description = db.Column(db.String(255))
+
+class User(db.Model, UserMixin):
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(255), unique=True)
+    password = db.Column(db.String(255))
+    active = db.Column(db.Boolean())
+    confirmed_at = db.Column(db.DateTime())
+    roles = db.relationship('Role', secondary=roles_users,
+                            backref=db.backref('users', lazy='dynamic'))
+
+
+
+
+
+@app.before_first_request
+def create_user():
+    pass
+
+# KVSession
+store = SQLAlchemyStore(db.engine, db.metadata, 'sessions')
+kvsession = KVSessionExtension(store, app)
 
 
 @app.route('/debug', methods=['GET'])
 def debug():
-    return "".join(["<b>{}</b>: {} <br>".format(key, session[key]) for key in session])
+
+    response = make_response(repr(session))
+    response.content_type = 'text/plain'
+    return response
 
 
 @app.route('/cas/login', methods=['GET', 'POST'])
@@ -46,7 +76,7 @@ def login():
         session['username'] = request.form['username']
         return redirect(session['service'])
     if request.method == 'GET':
-        service = request.args.get('service', DEFAULT_SERVICE_URL)
+        service = request.args.get('service', app.config['DEFAULT_SERVICE_URL'])
         session['service'] = service
         return render_template('login.html', form=form)
 
@@ -56,7 +86,6 @@ def logout():
     # remove the username from the session if it's there
     session.pop('username', None)
     return redirect(url_for('index'))
-
 
 if __name__ == '__main__':
     shandler = logging.StreamHandler(sys.stdout)

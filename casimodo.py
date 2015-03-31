@@ -9,6 +9,7 @@ import redis
 
 from flask import Flask, session, render_template, flash
 from flask import redirect, url_for, request, make_response
+from flask_wtf.csrf import CsrfProtect
 
 from flask_kvsession import KVSessionExtension
 from simplekv.memory.redisstore import RedisStore
@@ -22,6 +23,8 @@ app = Flask(__name__)
 
 store = RedisStore(redis.StrictRedis())
 KVSessionExtension(store, app)
+
+CsrfProtect(app)
 
 app.secret_key = os.urandom(128)
 app.config.from_object('settings.DevelopmentConfig')

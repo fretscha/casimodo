@@ -1,5 +1,4 @@
 import os
-from datetime import timedelta
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
@@ -9,10 +8,8 @@ class Config(object):
     TESTING = False
     CSRF_ENABLED = True
     DEBUG_TB_INTERCEPT_REDIRECTS = False
-#   SQLALCHEMY_DATABASE_URI = os.environ['DATABASE_URL']
-    SQLALCHEMY_DATABASE_URI = 'sqlite://:memory:'
     DEFAULT_SERVICE_URL = '/debug'
-    PERMANENT_SESSION_LIFETIME = timedelta(seconds=300)
+    CAS_PREFIX = '/cas'
 
 
 class ProductionConfig(Config):

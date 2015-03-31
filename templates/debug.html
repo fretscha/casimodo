@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% block body %}
+  {% if not session.username %}
+    <a href="{{ url_for('login') }}">log in</a>
+  {% else %}
+    <a href="{{ url_for('logout') }}">log out</a>
+  {% endif %}
+{% endblock %}

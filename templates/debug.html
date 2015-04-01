@@ -5,4 +5,9 @@
   {% else %}
     <a href="{{ url_for('logout') }}">log out</a>
   {% endif %}
+    <ul>
+    {% for k in keys %}
+        <li><b>{{ k }}</b> ({{ ttl[k] }}) :  {{ value[k] }}</li>
+    {% endfor%}
+    </ul>
 {% endblock %}

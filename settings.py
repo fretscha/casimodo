@@ -6,10 +6,10 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 class Config(object):
     DEBUG = False
     TESTING = False
-    CSRF_ENABLED = True
     DEBUG_TB_INTERCEPT_REDIRECTS = False
     DEFAULT_SERVICE_URL = '/debug'
     CAS_PREFIX = '/cas'
+    SESSION_TIMEOUT = 300
 
 
 class ProductionConfig(Config):

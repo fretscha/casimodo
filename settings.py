@@ -7,9 +7,10 @@ class Config(object):
     DEBUG = False
     TESTING = False
     DEBUG_TB_INTERCEPT_REDIRECTS = False
-    DEFAULT_SERVICE_URL = '/debug'
-    CAS_PREFIX = '/cas'
     SESSION_TIMEOUT = 300
+    CAS_PREFIX = '/cas'
+    CAS_DEFAULT_SERVICE_URL = 'http://127.0.0.1/debug'
+    CAS_ALLOWED_SEVICES = [r'http://127.0.0.1/debug']
 
 
 class ProductionConfig(Config):
